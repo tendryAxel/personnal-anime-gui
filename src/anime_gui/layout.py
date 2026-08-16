@@ -3,15 +3,7 @@ from toga.style import Pack
 from toga.style.pack import COLUMN
 
 
-def create_tab(app) -> toga.Box:
-    items = [
-        "Apple",
-        "Banana",
-        "Orange",
-        "Mango",
-        "Pineapple",
-    ]
-
+def create_tab(app: toga.App, items: list[str]) -> toga.Box:
     list_view = toga.Selection(items=items)
 
     return toga.Box(

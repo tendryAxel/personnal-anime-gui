@@ -11,11 +11,13 @@ class MyApp(toga.App):
     def startup(self) -> None:
         self.main_window: toga.MainWindow = toga.MainWindow(title=self.formal_name)
 
-        list_tab = create_tab(self)
+        list_number = create_tab(self, list(map(str, range(10))))
+        list_string = create_tab(self, ["hello", "no hello"])
 
         tabs = toga.OptionContainer(
             content=[
-                ("List", list_tab),
+                ("Numbers", list_number),
+                ("Strings", list_string),
             ],
             style=Pack(flex=1),
         )
