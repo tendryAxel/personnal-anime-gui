@@ -1,6 +1,5 @@
 from types import CoroutineType
 from typing import TypeIs, Callable, Any
-import asyncio
 import kitsu_extended as kitsu
 
 
@@ -17,10 +16,3 @@ async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, A
         return await request(client)
     finally:
         await client.close()
-
-def get_by_id(anime_id: int) -> kitsu.Anime:
-    result = asyncio.run(_api_request(lambda client: client.get_anime(anime_id)))
-
-    assert isAnime_validation(result)
-
-    return result

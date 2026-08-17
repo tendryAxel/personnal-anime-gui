@@ -1,9 +1,9 @@
-from anime_gui.anime_info_api.main import get_by_id
+from anime_gui.anime_info_api import anime
 
 
 def test_get_by_id():
     anime_id = 21
-    result = get_by_id(anime_id)
+    result = anime.get_by_id(anime_id)
 
     assert result.id == str(anime_id)
     assert result.title == "Neon Genesis Evangelion"
