@@ -1,4 +1,5 @@
-from typing import TypeIs
+from types import CoroutineType
+from typing import TypeIs, Callable, Any
 import asyncio
 import kitsu_extended as kitsu
 
@@ -9,16 +10,16 @@ def isAnime_validation(to_valid) -> TypeIs[kitsu.Anime]:
     
     raise TypeError(f"Need parsing implementation of {type(to_valid) = }, that contains: {to_valid}")
 
-def get_by_id(anime_id: int) -> kitsu.Anime:
-    async def async_get_by_id(anime_id: int) -> kitsu.Anime | dict:
-        client = kitsu.Client()
+async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]]) -> T:
+    client = kitsu.Client()
 
-        try:
-            return await client.get_anime(anime_id)
-        finally:
-            await client.close()
-            
-    result = asyncio.run(async_get_by_id(anime_id))
+    try:
+        return await request(client)
+    finally:
+        await client.close()
+
+def get_by_id(anime_id: int) -> kitsu.Anime:
+    result = asyncio.run(_api_request(lambda client: client.get_anime(anime_id)))
 
     assert isAnime_validation(result)
 
