@@ -1,3 +1,4 @@
+from anime_gui.anime_info_api.components.search_list import anime_in_search_result
 import anime_gui.anime_info_api.anime
 import toga
 from toga.style import Pack
@@ -39,13 +40,17 @@ def search_anime(app: toga.App) -> toga.Box:
 
         results.clear()
         for anime in animes:
-            result = toga.Label(
-                f"Id: {anime.id} Name: {anime.title}",
-                style=Pack(
-                    padding=10,
-                ),
+            results.add(
+                toga.Box(
+                    children=[
+                        anime_in_search_result(anime),
+                    ],
+                    style=Pack(
+                        direction=ROW,
+                        margin_bottom=10,
+                    ),
+                )
             )
-            results.add(result)
 
     search_button = toga.Button(
         "Search",
