@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "dotenv>=0.9.9",
     "kitsu-py-extended>=1.0.4",
     "toga>=0.5.6",
 ]
