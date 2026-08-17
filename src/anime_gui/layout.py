@@ -33,15 +33,14 @@ def search_anime(app: toga.App) -> toga.Box:
         ),
     )
 
-    # TODO: make that async
-    def on_search(widget):
+    async def on_search(widget):
         query = search_input.value
-        animes = anime_gui.anime_info_api.anime.find_by_name(query)
+        animes = await anime_gui.anime_info_api.anime.find_by_name(query)
 
         results.clear()
         for anime in animes:
             result = toga.Label(
-                f"Found: {anime}",
+                f"Id: {anime.id} Name: {anime.title}",
                 style=Pack(
                     padding=10,
                 ),
