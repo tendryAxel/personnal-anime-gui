@@ -80,6 +80,15 @@ def search_anime(app: toga.App) -> toga.Box:
         ),
     )
 
+    results_scroll = toga.ScrollContainer(
+        content=results,
+        horizontal=False,
+        vertical=True,
+        style=Pack(
+            flex=1,
+        ),
+    )
+
     return toga.Box(
         children=[
             toga.Label(
@@ -90,7 +99,7 @@ def search_anime(app: toga.App) -> toga.Box:
                 ),
             ),
             search_bar,
-            results,
+            results_scroll,
         ],
         style=Pack(
             direction=COLUMN,
