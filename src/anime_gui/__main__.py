@@ -4,7 +4,7 @@ import toga
 from toga.style import Pack
 from toga.style.pack import ROW
 
-from .layout import create_tab
+from .layout import create_tab, search_anime
 
 
 class MyApp(toga.App):
@@ -13,9 +13,11 @@ class MyApp(toga.App):
 
         list_number = create_tab(self, list(map(str, range(10))))
         list_string = create_tab(self, ["hello", "no hello"])
+        search_anime_tab = search_anime(self)
 
         tabs = toga.OptionContainer(
             content=[
+                ("Search", search_anime_tab),
                 ("Numbers", list_number),
                 ("Strings", list_string),
             ],
