@@ -1,4 +1,4 @@
-from kitsu_extended import Anime
+from kitsu_extended import Anime, Client
 from anime_gui.anime_info_api.main import PageParam
 from anime_gui.anime_info_api.components.search_list import anime_in_search_result, create_pagination_button, PaginationButton
 import anime_gui.anime_info_api.anime
