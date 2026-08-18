@@ -1,8 +1,11 @@
+from collections.abc import Callable, Coroutine, Awaitable
+from functools import wraps
+from ast import arg
 import base64
 import pickle
 import dataclasses
 from types import CoroutineType
-from typing import TypeIs, Callable, Any
+from typing import TypeIs, Any
 import kitsu_extended as kitsu
 import dotenv
 import hashlib
@@ -43,6 +46,60 @@ class CachingUtilities:
     def deserialize[T](value: str) -> T:
         pickled = base64.b64decode(value.encode(CachingUtilities.byte_encoding))
         return pickle.loads(pickled)
+    
+    @classmethod
+    def async_caching[**P, T](cls, func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+        # TODO: use cls instead
+        @wraps(func)
+        async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
+            request_key = CachingUtilities._make_cache_key(
+                str(func),
+                {
+                    **{str(i): value for i, value in enumerate(args)},
+                    **kwargs,
+                }
+            )
+
+            cached = CachingUtilities.cache.get(request_key)
+            if cached is not None:
+                print(f"Cache HIT for the {request_key = }")
+                return CachingUtilities.deserialize(cached)
+
+            result = await func(*args, **kwargs)
+            print(f"Cache MISS for the {request_key = }")
+
+            CachingUtilities.cache[request_key] = CachingUtilities.serialize(result)
+
+            return result
+
+        return inner
+    
+    @classmethod
+    def caching[**P, T](cls, func: Callable[P, T]) -> Callable[P, T]:
+        # TODO: use cls instead
+        @wraps(func)
+        def inner(*args: P.args, **kwargs: P.kwargs) -> T:
+            request_key = CachingUtilities._make_cache_key(
+                str(func),
+                {
+                    **{str(i): value for i, value in enumerate(args)},
+                    **kwargs,
+                }
+            )
+
+            cached = CachingUtilities.cache.get(request_key)
+            if cached is not None:
+                print(f"Cache HIT for the {request_key = }")
+                return CachingUtilities.deserialize(cached)
+
+            result = func(*args, **kwargs)
+            print(f"Cache MISS for the {request_key = }")
+
+            CachingUtilities.cache[request_key] = CachingUtilities.serialize(result)
+
+            return result
+
+        return inner
 
 def isAnime(to_valid) -> TypeIs[kitsu.Anime]:
     if isinstance(to_valid, kitsu.Anime):
@@ -65,19 +122,10 @@ def isAnime_list_validation(to_valid) -> TypeIs[list[kitsu.Anime]]:
     return True
 
 async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]], key: str) -> T:
-    cache_content = CachingUtilities.cache.get(key)
-
-    if cache_content is not None:
-        print(f"Cache HIT for the {key = }")
-        return CachingUtilities.deserialize(cache_content)
-
     client = kitsu.Client()
 
     try:
-        print(f"Cache MISS for the {key = }")
-        result = await request(client)
-        CachingUtilities.cache[key] = CachingUtilities.serialize(result)
-        return result
+        return await request(client)
     finally:
         await client.close()
 

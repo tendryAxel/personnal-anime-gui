@@ -4,6 +4,7 @@ from anime_gui.anime_info_api.main import _api_request, isAnime_validation, Page
 from kitsu_extended import Anime
 
 
+@CachingUtilities.async_caching
 async def get_by_id(anime_id: int) -> Anime:
     request_key = CachingUtilities._make_cache_key("get_by_id", {"id": anime_id})
     
@@ -12,6 +13,7 @@ async def get_by_id(anime_id: int) -> Anime:
     return result
 
 
+@CachingUtilities.async_caching
 async def find_by_name(
     anime_name: str,
     page_param: Optional[PageParam] = None,

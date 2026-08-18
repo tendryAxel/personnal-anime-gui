@@ -7,17 +7,16 @@ from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
 
 
+@CachingUtilities.caching
+def fetch_image(url: str) -> bytes:
+    return requests.get(url).content
+
+
 def anime_in_search_result(anime: Anime) -> Box:
     # TODO: make image loading async
     image_url = anime.poster_image("tiny")
     if image_url is not None:
-        request_key = CachingUtilities._make_cache_key(f"{anime_in_search_result.__name__}_image_data", {"url": image_url})
-        cached = CachingUtilities.cache.get(request_key)
-        if cached is not None:
-            image_data: bytes = CachingUtilities.deserialize(cached)
-        else:
-            image_data = requests.get(image_url).content
-            CachingUtilities.cache[request_key] = CachingUtilities.serialize(image_data)
+        image_data = fetch_image(image_url)
 
     return Box(
         children=[
