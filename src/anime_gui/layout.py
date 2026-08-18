@@ -29,7 +29,7 @@ def create_tab(app: toga.App, items: list[str]) -> toga.Box:
 
 # TODO: convert to class
 def search_anime(app: toga.App) -> toga.Box:
-    actual_page = PageParam(0, 1)
+    actual_page = PageParam(0, 10)
 
     search_input = toga.TextInput(
         placeholder="Search for an anime...",

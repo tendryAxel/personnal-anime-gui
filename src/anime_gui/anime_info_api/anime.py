@@ -1,11 +1,13 @@
 import os
 from typing import Optional
-from anime_gui.anime_info_api.main import _api_request, isAnime_validation, PageParam, isAnime, isAnime_list_validation
+from anime_gui.anime_info_api.main import _api_request, isAnime_validation, PageParam, isAnime, isAnime_list_validation, CachingUtilities
 from kitsu_extended import Anime
 
 
 async def get_by_id(anime_id: int) -> Anime:
-    result = await _api_request(lambda client: client.get_anime(anime_id))
+    request_key = CachingUtilities._make_cache_key("get_by_id", {"id": anime_id})
+    
+    result = await _api_request(lambda client: client.get_anime(anime_id), key=request_key)
     assert isAnime_validation(result)
     return result
 
@@ -18,7 +20,9 @@ async def find_by_name(
     if page_param is not None:
         limit, offset = page_param.limit, page_param.offset
 
-    result = await _api_request(lambda client: client.search_anime(anime_name, limit, offset))
+    request_key = CachingUtilities._make_cache_key("find_by_name", {"name": anime_name, "page": page_param})
+
+    result = await _api_request(lambda client: client.search_anime(anime_name, limit, offset), key=request_key)
 
     if isAnime(result):
         result = [result]

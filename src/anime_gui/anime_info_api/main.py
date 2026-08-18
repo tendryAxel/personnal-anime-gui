@@ -1,3 +1,5 @@
+import base64
+import pickle
 import dataclasses
 from types import CoroutineType
 from typing import TypeIs, Callable, Any
@@ -10,27 +12,16 @@ import time
 dotenv.load_dotenv()
 
 
-class CachedClient(kitsu.Client):
-    def __init__(self, *args, cache_ttl=3600, **kwargs):
-        super().__init__(*args, **kwargs)
+# TODO: create a decoration instead
+class CachingUtilities:
+    cache: dict[str, str] = {}
+    byte_encoding = "ascii"
 
-        self.cache_ttl = cache_ttl
-        self.cache = {}
-    
-    def serialize(self, obj):
-        if isinstance(obj, dict):
-            return "{" + ",".join(
-                f"{self.serialize(k)}:{self.serialize(v)}"
-                for k, v in sorted(obj.items(), key=lambda x: str(x[0]))
-            ) + "}"
-        if isinstance(obj, (list, tuple)):
-            return "[" + ",".join(self.serialize(x) for x in obj) + "]"
-        return repr(obj)
-
-    def _make_cache_key(self, url, kwargs):
+    @staticmethod
+    def _make_cache_key(function_name: str, args: dict[str, Any]):
         payload = {
-            "url": url,
-            "params": kwargs.get("params", {}),
+            "url": function_name,
+            "params": args,
         }
 
         raw = json.dumps(
@@ -42,30 +33,16 @@ class CachedClient(kitsu.Client):
         print(f"Raw: {raw}")
 
         return hashlib.sha256(raw.encode()).hexdigest()
+    
+    @staticmethod
+    def serialize(obj: Any) -> str:
+        pickled = pickle.dumps(obj)
+        return base64.b64encode(pickled).decode(CachingUtilities.byte_encoding)
 
-    async def _get(self, url: str, **kwargs):
-        key = self._make_cache_key(url, kwargs)
-
-        cached = self.cache.get(key)
-
-        if cached is not None:
-            timestamp, data = cached
-
-            if time.time() - timestamp < self.cache_ttl:
-                print("CACHE HIT:", url)
-                return data
-
-            del self.cache[key]
-
-        # Not cached -> let the original library make the request
-        print("CACHE MISS:", url, kwargs)
-        print(f"cache content: {self.cache}")
-
-        data = await super()._get(url, **kwargs)
-
-        self.cache[key] = (time.time(), data)
-
-        return data
+    @staticmethod
+    def deserialize(value: str) -> Any:
+        pickled = base64.b64decode(value.encode(CachingUtilities.byte_encoding))
+        return pickle.loads(pickled)
 
 def isAnime(to_valid) -> TypeIs[kitsu.Anime]:
     if isinstance(to_valid, kitsu.Anime):
@@ -87,11 +64,20 @@ def isAnime_list_validation(to_valid) -> TypeIs[list[kitsu.Anime]]:
     
     return True
 
-async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]]) -> T:
-    client = CachedClient()
-    
+async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]], key: str) -> T:
+    cache_content = CachingUtilities.cache.get(key)
+
+    if cache_content is not None:
+        print(f"Cache HIT for the {key = }")
+        return CachingUtilities.deserialize(cache_content)
+
+    client = kitsu.Client()
+
     try:
-        return await request(client)
+        print(f"Cache MISS for the {key = }")
+        result = await request(client)
+        CachingUtilities.cache[key] = CachingUtilities.serialize(result)
+        return result
     finally:
         await client.close()
 
