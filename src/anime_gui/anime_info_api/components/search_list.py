@@ -1,3 +1,4 @@
+from anime_gui.anime_info_api.main import CachingUtilities
 from typing import Callable, Any, Coroutine
 import requests
 from toga.style import Pack
@@ -10,7 +11,13 @@ def anime_in_search_result(anime: Anime) -> Box:
     # TODO: make image loading async
     image_url = anime.poster_image("tiny")
     if image_url is not None:
-        image_data = requests.get(image_url).content
+        request_key = CachingUtilities._make_cache_key(f"{anime_in_search_result.__name__}_image_data", {"url": image_url})
+        cached = CachingUtilities.cache.get(request_key)
+        if cached is not None:
+            image_data: bytes = CachingUtilities.deserialize(cached)
+        else:
+            image_data = requests.get(image_url).content
+            CachingUtilities.cache[request_key] = CachingUtilities.serialize(image_data)
 
     return Box(
         children=[

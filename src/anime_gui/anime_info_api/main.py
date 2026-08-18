@@ -35,12 +35,12 @@ class CachingUtilities:
         return hashlib.sha256(raw.encode()).hexdigest()
     
     @staticmethod
-    def serialize(obj: Any) -> str:
+    def serialize[T](obj: T) -> str:
         pickled = pickle.dumps(obj)
         return base64.b64encode(pickled).decode(CachingUtilities.byte_encoding)
 
     @staticmethod
-    def deserialize(value: str) -> Any:
+    def deserialize[T](value: str) -> T:
         pickled = base64.b64decode(value.encode(CachingUtilities.byte_encoding))
         return pickle.loads(pickled)
 
