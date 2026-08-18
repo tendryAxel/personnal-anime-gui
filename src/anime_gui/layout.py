@@ -1,4 +1,6 @@
-from anime_gui.anime_info_api.components.search_list import anime_in_search_result
+from kitsu_extended import Anime
+from anime_gui.anime_info_api.main import PageParam
+from anime_gui.anime_info_api.components.search_list import anime_in_search_result, create_pagination_button, PaginationButton
 import anime_gui.anime_info_api.anime
 import toga
 from toga.style import Pack
@@ -25,7 +27,10 @@ def create_tab(app: toga.App, items: list[str]) -> toga.Box:
         ),
     )
 
+# TODO: convert to class
 def search_anime(app: toga.App) -> toga.Box:
+    actual_page = PageParam(0, 1)
+
     search_input = toga.TextInput(
         placeholder="Search for an anime...",
         style=Pack(
@@ -34,10 +39,7 @@ def search_anime(app: toga.App) -> toga.Box:
         ),
     )
 
-    async def on_search(widget):
-        query = search_input.value
-        animes = await anime_gui.anime_info_api.anime.find_by_name(query)
-
+    def reload_anime(animes: list[Anime]) -> None:
         results.clear()
         for anime in animes:
             results.add(
@@ -51,6 +53,18 @@ def search_anime(app: toga.App) -> toga.Box:
                     ),
                 )
             )
+
+    async def on_search(*arg):
+        animes = await anime_gui.anime_info_api.anime.find_by_name(
+            search_input.value,
+            actual_page,
+        )
+
+        reload_anime(animes)
+    
+    async def on_change_page(a: int):        
+        actual_page.page_number = a
+        await on_search(None)
 
     search_button = toga.Button(
         "Search",
@@ -89,6 +103,8 @@ def search_anime(app: toga.App) -> toga.Box:
         ),
     )
 
+    pagination_button = PaginationButton(on_page_change=on_change_page)
+
     return toga.Box(
         children=[
             toga.Label(
@@ -100,6 +116,7 @@ def search_anime(app: toga.App) -> toga.Box:
             ),
             search_bar,
             results_scroll,
+            pagination_button,
         ],
         style=Pack(
             direction=COLUMN,

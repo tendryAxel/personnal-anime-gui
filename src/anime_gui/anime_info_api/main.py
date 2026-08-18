@@ -54,3 +54,9 @@ class PageParam:
     @property
     def offset(self):
         return self.page_size * self.page_number
+    
+    def next_page(self):
+        self.page_number += 1
+    
+    def previous_page(self):
+        self.page_number -= 1
