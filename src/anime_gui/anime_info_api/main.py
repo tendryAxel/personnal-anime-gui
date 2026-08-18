@@ -52,7 +52,7 @@ class CachingUtilities:
         # TODO: use cls instead
         @wraps(func)
         async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
-            request_key = CachingUtilities._make_cache_key(
+            request_key = cls._make_cache_key(
                 str(func),
                 {
                     **{str(i): value for i, value in enumerate(args)},
@@ -60,15 +60,15 @@ class CachingUtilities:
                 }
             )
 
-            cached = CachingUtilities.cache.get(request_key)
+            cached = cls.cache.get(request_key)
             if cached is not None:
                 print(f"Cache HIT for the {request_key = }")
-                return CachingUtilities.deserialize(cached)
+                return cls.deserialize(cached)
 
             result = await func(*args, **kwargs)
             print(f"Cache MISS for the {request_key = }")
 
-            CachingUtilities.cache[request_key] = CachingUtilities.serialize(result)
+            cls.cache[request_key] = cls.serialize(result)
 
             return result
 
@@ -79,7 +79,7 @@ class CachingUtilities:
         # TODO: use cls instead
         @wraps(func)
         def inner(*args: P.args, **kwargs: P.kwargs) -> T:
-            request_key = CachingUtilities._make_cache_key(
+            request_key = cls._make_cache_key(
                 str(func),
                 {
                     **{str(i): value for i, value in enumerate(args)},
@@ -87,15 +87,15 @@ class CachingUtilities:
                 }
             )
 
-            cached = CachingUtilities.cache.get(request_key)
+            cached = cls.cache.get(request_key)
             if cached is not None:
                 print(f"Cache HIT for the {request_key = }")
-                return CachingUtilities.deserialize(cached)
+                return cls.deserialize(cached)
 
             result = func(*args, **kwargs)
             print(f"Cache MISS for the {request_key = }")
 
-            CachingUtilities.cache[request_key] = CachingUtilities.serialize(result)
+            cls.cache[request_key] = cls.serialize(result)
 
             return result
 
