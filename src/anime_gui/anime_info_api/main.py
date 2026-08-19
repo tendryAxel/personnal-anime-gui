@@ -129,6 +129,9 @@ def isAnime_validation(to_valid) -> TypeIs[kitsu.Anime]:
 
 
 def isAnime_list_validation(to_valid) -> TypeIs[list[kitsu.Anime]]:
+    if to_valid is None:
+        raise TypeError("Nothing to validate")
+
     for element in to_valid:
         isAnime_validation(element)
     

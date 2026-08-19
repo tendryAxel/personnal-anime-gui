@@ -7,6 +7,8 @@ import requests
 import toga
 import toga.style
 
+from PIL import Image as PILImage
+
 
 class LoadImage(toga.ImageView):
     """ImageView that loads an image asynchronously from a URL."""
@@ -22,19 +24,37 @@ class LoadImage(toga.ImageView):
         **kwargs,
     ):
         super().__init__(
-            None,
+            self._create_skeleton(),
             style=style,
             id=id,
             **kwargs,
         )
-        
+
         self.url = url
-        
+
         if url is not None:
             Thread(
                 target=self._load,
                 daemon=True,
             ).start()
+
+    @staticmethod
+    def _create_skeleton(
+        width: int = 300,
+        height: int = 450,
+        color: str = "#E5E7EB",
+    ) -> toga.Image:
+        """Create an in-memory loading skeleton."""
+        image = PILImage.new(
+            "RGB",
+            (width, height),
+            color,
+        )
+
+        buffer = BytesIO()
+        image.save(buffer, format="PNG")
+
+        return toga.Image(buffer.getvalue())
 
     def _load(self) -> None:
         try:
@@ -43,7 +63,6 @@ class LoadImage(toga.ImageView):
 
             data = self._fetch_image(self.url)
 
-            # Schedule the UI update on Toga's main thread.
             if self.app is None:
                 raise Exception(f"App of {self} is None")
 
