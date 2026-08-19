@@ -1,17 +1,34 @@
+from anime_gui.pages.details_page import AnimeDetailPage
 from toga_gtk.widgets.base import Widget
 from typing import cast
 import toga
 from toga.style import Pack
 from toga.style.pack import ROW
 
-from .layout import create_tab, search_anime
+from .layout import search_anime
 
+
+class PageManager:
+    def __init__(self, window: toga.Window):
+        self.window = window
+        self.pages = {}
+        self.current = None
+
+    def register(self, name: str, page: toga.Widget):
+        self.pages[name] = page
+
+    def show(self, name: str):
+        page = self.pages[name]
+
+        self.window.content = page
+        self.current = name
 
 class MyApp(toga.App):
     def startup(self) -> None:
         self.main_window: toga.MainWindow = toga.MainWindow(
             title="Anime Explorer",
         )
+        self.pages = PageManager(self.main_window)
 
         search_tab = search_anime(self)
 
@@ -24,7 +41,11 @@ class MyApp(toga.App):
             ),
         )
 
-        self.main_window.content = tabs
+        self.detail_page = AnimeDetailPage()
+
+        self.pages.register("search", tabs)
+        self.pages.show("search")
+        self.pages.register("details", self.detail_page)
         self.main_window.show()
 
 
