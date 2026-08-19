@@ -11,6 +11,7 @@ dependencies = [
     "diskcache>=5.6.3",
     "dotenv>=0.9.9",
     "kitsu-py-extended>=1.0.4",
+    "requests>=2.34.2",
     "toga>=0.5.6",
 ]
 license-files = ["LICENSE.md"]
@@ -36,6 +37,8 @@ sources = ["src/anime_gui"]
 [dependency-groups]
 dev = [
     "briefcase>=0.4.4",
+    "commitizen>=4.17.1",
+    "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
 ]
