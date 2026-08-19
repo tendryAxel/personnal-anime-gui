@@ -1,23 +1,12 @@
-from anime_gui.anime_info_api.main import CachingUtilities
+from anime_gui.anime_info_api.components.image import LoadImage
 from typing import Callable, Any, Coroutine
-import requests
 from toga.style import Pack
-from toga import Box, Label, Image, ImageView, Button
+from toga import Box, Label, Button
 from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
 
 
-@CachingUtilities.caching
-def fetch_image(url: str) -> bytes:
-    return requests.get(url).content
-
-
 def anime_in_search_result(anime: Anime) -> Box:
-    # TODO: make image loading async
-    image_url = anime.poster_image("tiny")
-    if image_url is not None:
-        image_data = fetch_image(image_url)
-
     return Box(
         children=[
             Label(
@@ -31,8 +20,8 @@ def anime_in_search_result(anime: Anime) -> Box:
 
             Box(
                 children=[
-                    ImageView(
-                        Image(image_data),
+                    LoadImage(
+                        anime.poster_image("tiny"),
                         style=Pack(
                             width=180,
                             height=240,
