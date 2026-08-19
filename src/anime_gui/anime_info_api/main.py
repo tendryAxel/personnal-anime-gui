@@ -1,3 +1,7 @@
+from anime_gui.settings import home_setting_path
+import inspect
+import datetime
+from diskcache import Cache
 from collections.abc import Callable, Coroutine, Awaitable
 from functools import wraps
 from ast import arg
@@ -15,15 +19,14 @@ import time
 dotenv.load_dotenv()
 
 
-# TODO: create a decoration instead
 class CachingUtilities:
-    cache: dict[str, str] = {}
+    cache = Cache(home_setting_path / "cache")
     byte_encoding = "ascii"
 
     @staticmethod
-    def _make_cache_key(function_name: str, args: dict[str, Any]):
+    def _make_cache_key(function_hashed: str, args: dict[str, Any]):
         payload = {
-            "url": function_name,
+            "url": function_hashed,
             "params": args,
         }
 
@@ -49,11 +52,13 @@ class CachingUtilities:
     
     @classmethod
     def async_caching[**P, T](cls, func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
-        # TODO: use cls instead
         @wraps(func)
         async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
+            func_source = inspect.getsource(func)
+            func_hash = hashlib.sha256(func_source.encode("utf-8")).hexdigest()
+            
             request_key = cls._make_cache_key(
-                str(func),
+                func_hash,
                 {
                     **{str(i): value for i, value in enumerate(args)},
                     **kwargs,
@@ -68,7 +73,10 @@ class CachingUtilities:
             result = await func(*args, **kwargs)
             print(f"Cache MISS for the {request_key = }")
 
-            cls.cache[request_key] = cls.serialize(result)
+            cls.cache.add(
+                request_key, cls.serialize(result),
+                expire=datetime.timedelta(days=3).total_seconds()
+            )
 
             return result
 
@@ -76,11 +84,13 @@ class CachingUtilities:
     
     @classmethod
     def caching[**P, T](cls, func: Callable[P, T]) -> Callable[P, T]:
-        # TODO: use cls instead
         @wraps(func)
         def inner(*args: P.args, **kwargs: P.kwargs) -> T:
+            func_source = inspect.getsource(func)
+            func_hash = hashlib.sha256(func_source.encode("utf-8")).hexdigest()
+            
             request_key = cls._make_cache_key(
-                str(func),
+                func_hash,
                 {
                     **{str(i): value for i, value in enumerate(args)},
                     **kwargs,
@@ -95,7 +105,10 @@ class CachingUtilities:
             result = func(*args, **kwargs)
             print(f"Cache MISS for the {request_key = }")
 
-            cls.cache[request_key] = cls.serialize(result)
+            cls.cache.add(
+                request_key, cls.serialize(result),
+                expire=datetime.timedelta(days=3).total_seconds()
+            )
 
             return result
 
@@ -121,7 +134,7 @@ def isAnime_list_validation(to_valid) -> TypeIs[list[kitsu.Anime]]:
     
     return True
 
-async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]], key: str) -> T:
+async def _api_request[T](request: Callable[[kitsu.Client], CoroutineType[Any, Any, T]]) -> T:
     client = kitsu.Client()
 
     try:

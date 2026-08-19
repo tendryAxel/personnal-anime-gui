@@ -6,9 +6,7 @@ from kitsu_extended import Anime
 
 @CachingUtilities.async_caching
 async def get_by_id(anime_id: int) -> Anime:
-    request_key = CachingUtilities._make_cache_key("get_by_id", {"id": anime_id})
-    
-    result = await _api_request(lambda client: client.get_anime(anime_id), key=request_key)
+    result = await _api_request(lambda client: client.get_anime(anime_id))
     assert isAnime_validation(result)
     return result
 
@@ -22,9 +20,7 @@ async def find_by_name(
     if page_param is not None:
         limit, offset = page_param.limit, page_param.offset
 
-    request_key = CachingUtilities._make_cache_key("find_by_name", {"name": anime_name, "page": page_param})
-
-    result = await _api_request(lambda client: client.search_anime(anime_name, limit, offset), key=request_key)
+    result = await _api_request(lambda client: client.search_anime(anime_name, limit, offset))
 
     if isAnime(result):
         result = [result]
