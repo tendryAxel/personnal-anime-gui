@@ -9,19 +9,19 @@ from .layout import create_tab, search_anime
 
 class MyApp(toga.App):
     def startup(self) -> None:
-        self.main_window: toga.MainWindow = toga.MainWindow(title=self.formal_name)
+        self.main_window: toga.MainWindow = toga.MainWindow(
+            title="Anime Explorer",
+        )
 
-        list_number = create_tab(self, list(map(str, range(10))))
-        list_string = create_tab(self, ["hello", "no hello"])
-        search_anime_tab = search_anime(self)
+        search_tab = search_anime(self)
 
         tabs = toga.OptionContainer(
             content=[
-                ("Search", search_anime_tab),
-                ("Numbers", list_number),
-                ("Strings", list_string),
+                ("Search", search_tab),
             ],
-            style=Pack(flex=1),
+            style=Pack(
+                flex=1,
+            ),
         )
 
         self.main_window.content = tabs
