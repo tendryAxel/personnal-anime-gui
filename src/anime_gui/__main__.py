@@ -4,7 +4,6 @@ import toga
 from toga.style import Pack
 from toga.style.pack import ROW
 
-from .layout import search_anime
 from anime_gui.pages.search_page import SearchPage
 from anime_gui.pages.details_page import AnimeDetailPage
 
