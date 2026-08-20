@@ -9,24 +9,25 @@ from anime_gui.components.search_list import anime_in_search_result, PaginationB
 
 
 class SearchPage(OptionContainer):
-    def __init__(self):
-        super().__init__(
-            content=[
-                ("Search", self.search_anime()),
-            ],
-            style=Pack(
-                flex=1,
-            ),
-        )
+    pagination: PageParam
+    search_input: TextInput
+    search_button: Button
+    search_bar: Box
+    results: Box
+    results_scroll: ScrollContainer
+    pagination_button: PaginationButton
+    pagination_section: Box
+    header: Box
+    search_card: Box
+    results_header: Label
+    search_tab: Box
     
-    def search_anime(self) -> Box:
-        actual_page = PageParam(0, 10)
+    def __init__(self):
+        # Variables
+        self.pagination = PageParam(0, 10)
 
-        # ---------------------------------------------------------
-        # Search input
-        # ---------------------------------------------------------
-
-        search_input = TextInput(
+        # Components
+        self.search_input = TextInput(
             placeholder="Search for an anime...",
             style=Pack(
                 flex=1,
@@ -34,27 +35,19 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        async def on_search(widget=None):
-            animes = await anime.find_by_name(
-                search_input.value,
-                actual_page,
-            )
-
-            reload_anime(animes)
-
-        search_button = Button(
+        self.search_button = Button(
             "Search",
-            on_press=on_search,
+            on_press=self.on_search,
             style=Pack(
                 width=100,
                 padding=8,
             ),
         )
 
-        search_bar = Box(
+        self.search_bar = Box(
             children=[
-                search_input,
-                search_button,
+                self.search_input,
+                self.search_button,
             ],
             style=Pack(
                 direction=ROW,
@@ -63,56 +56,15 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        # ---------------------------------------------------------
-        # Results
-        # ---------------------------------------------------------
-
-        results = Box(
+        self.results = Box(
             style=Pack(
                 direction=COLUMN,
                 padding=5,
             ),
         )
 
-        def reload_anime(animes: list[Anime]) -> None:
-            results.clear()
-
-            if not animes:
-                results.add(
-                    Box(
-                        children=[
-                            Label(
-                                "No anime found.",
-                                style=Pack(
-                                    padding=30,
-                                    text_align="center",
-                                ),
-                            ),
-                        ],
-                        style=Pack(
-                            direction=COLUMN,
-                            align_items="center",
-                        ),
-                    )
-                )
-                return
-
-            for anime in animes:
-                result = Box(
-                    children=[
-                        anime_in_search_result(anime),
-                    ],
-                    style=Pack(
-                        direction=COLUMN,
-                        padding=10,
-                        margin_bottom=8,
-                    ),
-                )
-
-                results.add(result)
-
-        results_scroll = ScrollContainer(
-            content=results,
+        self.results_scroll = ScrollContainer(
+            content=self.results,
             horizontal=False,
             vertical=True,
             style=Pack(
@@ -120,21 +72,13 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        # ---------------------------------------------------------
-        # Pagination
-        # ---------------------------------------------------------
-
-        async def on_change_page(page: int):
-            actual_page.page_number = page
-            await on_search()
-
-        pagination_button = PaginationButton(
-            on_page_change=on_change_page,
+        self.pagination_button = PaginationButton(
+            on_page_change=self.on_change_page,
         )
 
-        pagination = Box(
+        self.pagination_section = Box(
             children=[
-                pagination_button,
+                self.pagination_button,
             ],
             style=Pack(
                 direction=ROW,
@@ -144,11 +88,7 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        # ---------------------------------------------------------
-        # Main layout
-        # ---------------------------------------------------------
-
-        header = Box(
+        self.header = Box(
             children=[
                 Label(
                     "Anime Explorer",
@@ -169,9 +109,9 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        search_card = Box(
+        self.search_card = Box(
             children=[
-                search_bar,
+                self.search_bar,
             ],
             style=Pack(
                 direction=COLUMN,
@@ -179,7 +119,7 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        results_header = Label(
+        self.results_header = Label(
             "Search results",
             style=Pack(
                 font_size=16,
@@ -188,13 +128,14 @@ class SearchPage(OptionContainer):
             ),
         )
 
-        return Box(
+        # Tab creation
+        self.search_tab = Box(
             children=[
-                header,
-                search_card,
-                results_header,
-                results_scroll,
-                pagination,
+                self.header,
+                self.search_card,
+                self.results_header,
+                self.results_scroll,
+                self.pagination_section,
             ],
             style=Pack(
                 direction=COLUMN,
@@ -203,3 +144,60 @@ class SearchPage(OptionContainer):
             ),
         )
 
+        super().__init__(
+            content=[
+                ("Search", self.search_tab),
+            ],
+            style=Pack(
+                flex=1,
+            ),
+        )
+
+    async def on_search(self, widget=None):
+        animes = await anime.find_by_name(
+            self.search_input.value,
+            self.pagination,
+        )
+
+        self.reload_anime(animes)
+    
+    def reload_anime(self, animes: list[Anime]) -> None:
+        self.results.clear()
+
+        if not animes:
+            self.results.add(
+                Box(
+                    children=[
+                        Label(
+                            "No anime found.",
+                            style=Pack(
+                                padding=30,
+                                text_align="center",
+                            ),
+                        ),
+                    ],
+                    style=Pack(
+                        direction=COLUMN,
+                        align_items="center",
+                    ),
+                )
+            )
+            return
+
+        for anime in animes:
+            result = Box(
+                children=[
+                    anime_in_search_result(anime),
+                ],
+                style=Pack(
+                    direction=COLUMN,
+                    padding=10,
+                    margin_bottom=8,
+                ),
+            )
+
+            self.results.add(result)
+
+    async def on_change_page(self, page: int):
+        self.pagination.page_number = page
+        await self.on_search()
