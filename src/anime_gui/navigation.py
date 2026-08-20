@@ -7,10 +7,15 @@ class PageManager:
         self.pages = {}
         self.current = None
 
-    def register(self, name: str, page: Widget):
+    def register(self, name: str, page: Widget) -> None:
+        """
+        The first page registered will be set as the current
+        """
         self.pages[name] = page
+        if self.current is None:
+            self.show(name)
 
-    def show(self, name: str):
+    def show(self, name: str) -> None:
         page = self.pages[name]
 
         self.window.content = page

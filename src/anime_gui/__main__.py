@@ -20,7 +20,6 @@ class MyApp(toga.App):
         self.detail_page = AnimeDetailPage()
 
         self.pages.register("search", self.search_page)
-        self.pages.show("search")
         self.pages.register("details", self.detail_page)
         self.main_window.show()
 
