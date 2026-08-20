@@ -6,12 +6,15 @@ from toga.style import Pack
 from anime_info_api.main import PageParam
 from anime_info_api import anime
 from anime_gui.components.search_list import PaginationButton, SingleAnimeSearchResult
+from anime_gui.navigation import PageManager
 
 
 # TODO: reset pagination for new query
 class SearchPage(OptionContainer):
     pagination: PageParam
     animes_component: list[SingleAnimeSearchResult]
+    page_manager: PageManager
+
     search_input: TextInput
     search_button: Button
     search_bar: Box
@@ -24,10 +27,11 @@ class SearchPage(OptionContainer):
     results_header: Label
     search_tab: Box
     
-    def __init__(self):
+    def __init__(self, pages: PageManager):
         # Variables
         self.pagination = PageParam(0, 10)
         self.animes_component = []
+        self.page_manager = pages
 
         # Components
         self.search_input = TextInput(
@@ -176,7 +180,10 @@ class SearchPage(OptionContainer):
 
         for anime in animes:
             self.animes_component.append(
-                SingleAnimeSearchResult(anime)
+                SingleAnimeSearchResult(
+                    anime,
+                    self.page_manager,
+                )
             )
 
     def reload_anime(self) -> None:

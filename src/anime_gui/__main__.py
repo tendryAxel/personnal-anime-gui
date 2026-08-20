@@ -6,21 +6,8 @@ from toga.style.pack import ROW
 
 from anime_gui.pages.search_page import SearchPage
 from anime_gui.pages.details_page import AnimeDetailPage
+from anime_gui.navigation import PageManager
 
-class PageManager:
-    def __init__(self, window: toga.Window):
-        self.window = window
-        self.pages = {}
-        self.current = None
-
-    def register(self, name: str, page: toga.Widget):
-        self.pages[name] = page
-
-    def show(self, name: str):
-        page = self.pages[name]
-
-        self.window.content = page
-        self.current = name
 
 class MyApp(toga.App):
     def startup(self) -> None:
@@ -29,7 +16,7 @@ class MyApp(toga.App):
         )
         self.pages = PageManager(self.main_window)
 
-        self.search_page = SearchPage()
+        self.search_page = SearchPage(self.pages)
         self.detail_page = AnimeDetailPage()
 
         self.pages.register("search", self.search_page)

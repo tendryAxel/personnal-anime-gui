@@ -1,15 +1,22 @@
-from anime_gui.components.image import LoadImage
 from typing import Callable, Any, Coroutine
 from toga.style import Pack
 from toga import Box, Label, Button
 from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
+from typing import TYPE_CHECKING
+
+from anime_gui.navigation import PageManager
+from anime_gui.components.image import LoadImage
 
 
 class SingleAnimeSearchResult(Box):
     image_component: LoadImage
 
-    def __init__(self, anime: Anime):
+    def __init__(
+        self,
+        anime: Anime,
+        pages: PageManager,
+    ):
         self.image_component = LoadImage(
             anime.poster_image("tiny"),
             style=Pack(
@@ -50,6 +57,11 @@ class SingleAnimeSearchResult(Box):
                                     style=Pack(
                                         flex=1,
                                     ),
+                                ),
+
+                                Button(
+                                    "info",
+                                    on_press=lambda e: pages.show("details")
                                 ),
                             ],
                             style=Pack(
