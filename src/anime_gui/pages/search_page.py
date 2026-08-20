@@ -5,7 +5,7 @@ from toga.style import Pack
 
 from anime_info_api.main import PageParam
 from anime_info_api import anime
-from anime_gui.components.search_list import anime_in_search_result, PaginationButton
+from anime_gui.components.search_list import PaginationButton, SingleAnimeSearchResult
 
 
 class SearchPage(OptionContainer):
@@ -187,7 +187,7 @@ class SearchPage(OptionContainer):
         for anime in animes:
             result = Box(
                 children=[
-                    anime_in_search_result(anime),
+                    SingleAnimeSearchResult(anime),
                 ],
                 style=Pack(
                     direction=COLUMN,

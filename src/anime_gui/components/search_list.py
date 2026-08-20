@@ -6,67 +6,67 @@ from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
 
 
-def anime_in_search_result(anime: Anime) -> Box:
-    return Box(
-        children=[
-            Label(
-                anime.title or "",
-                style=Pack(
-                    font_size=18,
-                    font_weight="bold",
-                    margin_bottom=5,
-                ),
-            ),
-
-            Box(
-                children=[
-                    LoadImage(
-                        anime.poster_image("tiny"),
-                        style=Pack(
-                            width=180,
-                            height=240,
-                            margin_right=15,
-                        ),
+class SingleAnimeSearchResult(Box):
+    def __init__(self, anime: Anime):
+        super().__init__(
+            children=[
+                Label(
+                    anime.title or "",
+                    style=Pack(
+                        font_size=18,
+                        font_weight="bold",
+                        margin_bottom=5,
                     ),
-
-                    # Anime information
-                    Box(
-                        children=[
-                            Label(
-                                f"⭐ {anime.average_rating or '?'}  •  "
-                                f"{anime.subtype or '?'}  •  "
-                                f"{anime.episode_count or '?'} episodes  •  "
-                                f"{anime.status or '?'}",
-                                style=Pack(
-                                    margin_bottom=8,
-                                ),
-                            ),
-
-                            Label(
-                                anime.synopsis or "No synopsis available.",
-                                style=Pack(
-                                    flex=1,
-                                ),
-                            ),
-                        ],
-                        style=Pack(
-                            direction=COLUMN,
-                            flex=1,
-                        ),
-                    ),
-                ],
-                style=Pack(
-                    direction=ROW,
-                    flex=1,
                 ),
+
+                Box(
+                    children=[
+                        LoadImage(
+                            anime.poster_image("tiny"),
+                            style=Pack(
+                                width=180,
+                                height=240,
+                                margin_right=15,
+                            ),
+                        ),
+
+                        Box(
+                            children=[
+                                Label(
+                                    f"⭐ {anime.average_rating or '?'}  •  "
+                                    f"{anime.subtype or '?'}  •  "
+                                    f"{anime.episode_count or '?'} episodes  •  "
+                                    f"{anime.status or '?'}",
+                                    style=Pack(
+                                        margin_bottom=8,
+                                    ),
+                                ),
+
+                                Label(
+                                    anime.synopsis or "No synopsis available.",
+                                    style=Pack(
+                                        flex=1,
+                                    ),
+                                ),
+                            ],
+                            style=Pack(
+                                direction=COLUMN,
+                                flex=1,
+                            ),
+                        ),
+                    ],
+                    style=Pack(
+                        direction=ROW,
+                        flex=1,
+                    ),
+                ),
+            ],
+            style=Pack(
+                direction=COLUMN,
+                flex=1,
+                margin=10,
             ),
-        ],
-        style=Pack(
-            direction=COLUMN,
-            flex=1,
-            margin=10,
-        ),
-    )
+        )
 
 def create_pagination_button(
     on_previous: Callable[[Any], None],
