@@ -13,8 +13,6 @@ class MyApp(App):
         self.pages = PageManager(self.main_window)
 
         self.search_page = SearchPage(self.pages)
-        self.detail_page = AnimeDetailPage()
 
         self.pages.register("search", self.search_page)
-        self.pages.register("details", self.detail_page)
         self.main_window.show()
