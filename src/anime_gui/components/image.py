@@ -32,12 +32,6 @@ class LoadImage(toga.ImageView):
 
         self.url = url
 
-        if url is not None:
-            Thread(
-                target=self._load,
-                daemon=True,
-            ).start()
-
     @staticmethod
     def _create_skeleton(
         width: int = 300,
@@ -83,3 +77,11 @@ class LoadImage(toga.ImageView):
         response = requests.get(url, timeout=15)
         response.raise_for_status()
         return response.content
+    
+    def start_loading(self) -> None:
+        if self.url is not None:
+            Thread(
+                target=self._load,
+                daemon=True,
+            ).start()
+    

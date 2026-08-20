@@ -10,6 +10,7 @@ from anime_gui.components.search_list import PaginationButton, SingleAnimeSearch
 
 class SearchPage(OptionContainer):
     pagination: PageParam
+    animes_component: list[SingleAnimeSearchResult]
     search_input: TextInput
     search_button: Button
     search_bar: Box
@@ -25,6 +26,7 @@ class SearchPage(OptionContainer):
     def __init__(self):
         # Variables
         self.pagination = PageParam(0, 10)
+        self.animes_component = []
 
         # Components
         self.search_input = TextInput(
@@ -160,9 +162,14 @@ class SearchPage(OptionContainer):
         )
 
         self.reload_anime(animes)
+
+        for element in self.animes_component:
+            element.start_loading()
     
     def reload_anime(self, animes: list[Anime]) -> None:
         self.results.clear()
+        # TODO: fill the self.animes_component first before populating the gui
+        self.animes_component.clear()
 
         if not animes:
             self.results.add(
@@ -185,9 +192,10 @@ class SearchPage(OptionContainer):
             return
 
         for anime in animes:
+            anime_component = SingleAnimeSearchResult(anime)
             result = Box(
                 children=[
-                    SingleAnimeSearchResult(anime),
+                    anime_component,
                 ],
                 style=Pack(
                     direction=COLUMN,
@@ -197,6 +205,7 @@ class SearchPage(OptionContainer):
             )
 
             self.results.add(result)
+            self.animes_component.append(anime_component)
 
     async def on_change_page(self, page: int):
         self.pagination.page_number = page

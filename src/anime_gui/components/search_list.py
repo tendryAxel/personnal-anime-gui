@@ -7,7 +7,18 @@ from toga.style.pack import COLUMN, ROW
 
 
 class SingleAnimeSearchResult(Box):
+    image_component: LoadImage
+
     def __init__(self, anime: Anime):
+        self.image_component = LoadImage(
+            anime.poster_image("tiny"),
+            style=Pack(
+                width=180,
+                height=240,
+                margin_right=15,
+            ),
+        )
+
         super().__init__(
             children=[
                 Label(
@@ -21,15 +32,7 @@ class SingleAnimeSearchResult(Box):
 
                 Box(
                     children=[
-                        LoadImage(
-                            anime.poster_image("tiny"),
-                            style=Pack(
-                                width=180,
-                                height=240,
-                                margin_right=15,
-                            ),
-                        ),
-
+                        self.image_component,
                         Box(
                             children=[
                                 Label(
@@ -67,6 +70,9 @@ class SingleAnimeSearchResult(Box):
                 margin=10,
             ),
         )
+    
+    def start_loading(self) -> None:
+        self.image_component.start_loading()
 
 def create_pagination_button(
     on_previous: Callable[[Any], None],
