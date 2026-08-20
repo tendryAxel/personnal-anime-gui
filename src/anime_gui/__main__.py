@@ -1,4 +1,3 @@
-from anime_gui.pages.details_page import AnimeDetailPage
 from toga_gtk.widgets.base import Widget
 from typing import cast
 import toga
@@ -6,7 +5,8 @@ from toga.style import Pack
 from toga.style.pack import ROW
 
 from .layout import search_anime
-
+from anime_gui.pages.search_page import SearchPage
+from anime_gui.pages.details_page import AnimeDetailPage
 
 class PageManager:
     def __init__(self, window: toga.Window):
@@ -30,20 +30,10 @@ class MyApp(toga.App):
         )
         self.pages = PageManager(self.main_window)
 
-        search_tab = search_anime(self)
-
-        tabs = toga.OptionContainer(
-            content=[
-                ("Search", search_tab),
-            ],
-            style=Pack(
-                flex=1,
-            ),
-        )
-
+        self.search_page = SearchPage()
         self.detail_page = AnimeDetailPage()
 
-        self.pages.register("search", tabs)
+        self.pages.register("search", self.search_page)
         self.pages.show("search")
         self.pages.register("details", self.detail_page)
         self.main_window.show()

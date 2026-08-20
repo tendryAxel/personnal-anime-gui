@@ -8,7 +8,7 @@ from toga.style.pack import COLUMN, ROW
 
 
 # TODO: convert to class
-def search_anime(app: toga.App) -> toga.Box:
+def search_anime() -> toga.Box:
     actual_page = PageParam(0, 10)
 
     # ---------------------------------------------------------
