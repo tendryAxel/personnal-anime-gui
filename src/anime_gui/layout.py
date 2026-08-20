@@ -1,7 +1,7 @@
+from anime_info_api.main import PageParam
+from anime_info_api import anime
 from anime_gui.components.search_list import PaginationButton, anime_in_search_result
 from kitsu_extended import Anime, Client
-from anime_gui.anime_info_api.main import PageParam
-import anime_gui.anime_info_api.anime
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
@@ -24,7 +24,7 @@ def search_anime(app: toga.App) -> toga.Box:
     )
 
     async def on_search(widget=None):
-        animes = await anime_gui.anime_info_api.anime.find_by_name(
+        animes = await anime.find_by_name(
             search_input.value,
             actual_page,
         )

@@ -1,5 +1,5 @@
 import pytest
-from anime_gui.anime_info_api import anime
+from anime_info_api import anime
 
 
 @pytest.mark.asyncio

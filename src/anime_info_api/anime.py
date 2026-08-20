@@ -1,6 +1,6 @@
+from anime_info_api.main import CachingUtilities, _api_request, isAnime_validation, PageParam, isAnime, isAnime_list_validation
 import os
 from typing import Optional
-from anime_gui.anime_info_api.main import _api_request, isAnime_validation, PageParam, isAnime, isAnime_list_validation, CachingUtilities
 from kitsu_extended import Anime
 
 

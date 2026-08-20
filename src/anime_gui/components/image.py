@@ -1,5 +1,5 @@
+from anime_info_api.main import CachingUtilities
 from typing import Optional
-from anime_gui.anime_info_api.main import CachingUtilities
 from threading import Thread
 from io import BytesIO
 

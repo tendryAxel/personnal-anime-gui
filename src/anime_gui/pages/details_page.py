@@ -1,14 +1,10 @@
 from __future__ import annotations
+from anime_info_api.anime import get_by_id
 from anime_gui.components.image import LoadImage
-
 from typing import Optional
-
 import toga
 import toga.style
-
 from kitsu_extended import Anime
-
-from anime_gui.anime_info_api.anime import get_by_id
 
 
 class AnimeDetailPage(toga.Box):
