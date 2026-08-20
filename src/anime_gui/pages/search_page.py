@@ -8,6 +8,7 @@ from anime_info_api import anime
 from anime_gui.components.search_list import PaginationButton, SingleAnimeSearchResult
 
 
+# TODO: reset pagination for new query
 class SearchPage(OptionContainer):
     pagination: PageParam
     animes_component: list[SingleAnimeSearchResult]
@@ -161,17 +162,27 @@ class SearchPage(OptionContainer):
             self.pagination,
         )
 
-        self.reload_anime(animes)
+        self.build_anime_list(animes)
+        self.reload_anime()
 
         for element in self.animes_component:
             element.start_loading()
     
-    def reload_anime(self, animes: list[Anime]) -> None:
-        self.results.clear()
-        # TODO: fill the self.animes_component first before populating the gui
+    def build_anime_list(self, animes: list[Anime] | None) -> None:
         self.animes_component.clear()
 
-        if not animes:
+        if animes is None:
+            return
+
+        for anime in animes:
+            self.animes_component.append(
+                SingleAnimeSearchResult(anime)
+            )
+
+    def reload_anime(self) -> None:
+        self.results.clear()
+
+        if len(self.animes_component) == 0:
             self.results.add(
                 Box(
                     children=[
@@ -191,11 +202,10 @@ class SearchPage(OptionContainer):
             )
             return
 
-        for anime in animes:
-            anime_component = SingleAnimeSearchResult(anime)
+        for anime in self.animes_component:
             result = Box(
                 children=[
-                    anime_component,
+                    anime,
                 ],
                 style=Pack(
                     direction=COLUMN,
@@ -205,7 +215,6 @@ class SearchPage(OptionContainer):
             )
 
             self.results.add(result)
-            self.animes_component.append(anime_component)
 
     async def on_change_page(self, page: int):
         self.pagination.page_number = page
