@@ -1,4 +1,4 @@
-from anime_gui.anime_info_api.components.image import LoadImage
+from anime_gui.components.image import LoadImage
 from typing import Callable, Any, Coroutine
 from toga.style import Pack
 from toga import Box, Label, Button
