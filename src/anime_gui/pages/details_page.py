@@ -525,14 +525,11 @@ class AnimeDetailPage(toga.Box):
     # =========================================================
 
     async def _go_back(self, widget: toga.Widget) -> None:
-        """
-        Go back to the previous page.
+        """Go back to the previous page."""
 
-        TODO:
-        Connect this to your application's navigation system.
-        """
-
-        pass
+        self.context.not_implemented_notification(
+            "Back navigation will be connected to the application router soon."
+        )
 
     # =========================================================
     # ACTIONS
@@ -541,28 +538,33 @@ class AnimeDetailPage(toga.Box):
     async def _toggle_favorite(self, widget: toga.Widget) -> None:
         """Add/remove the anime from favorites."""
 
-        # TODO:
-        # Implement favorite persistence.
-        pass
+        self.context.not_implemented_notification(
+            "Favorite support is not implemented yet. "
+            "This will allow you to save and remove anime from your favorites."
+        )
 
     async def _add_to_watchlist(self, widget: toga.Widget) -> None:
         """Add the anime to the user's watchlist."""
 
-        # TODO:
-        # Implement watchlist.
-        pass
+        self.context.not_implemented_notification(
+            "Watchlist support is not implemented yet. "
+            "This will allow you to keep track of anime you want to watch."
+        )
 
     async def _open_trailer(self, widget: toga.Widget) -> None:
         """Open the anime trailer."""
 
-        # TODO:
-        # Find trailer URL and open it.
-        pass
+        self.context.not_implemented_notification(
+            "Trailer support is not implemented yet. "
+            "This will open the anime's trailer when one is available."
+        )
 
     async def _share(self, widget: toga.Widget) -> None:
         """Share the anime."""
 
-        self.context.not_implemented_notification("Share function will be implemented soon")
+        self.context.not_implemented_notification(
+            "Share function will be implemented soon"
+        )
 
     async def _refresh(self, widget: toga.Widget) -> None:
         """Reload the current anime."""
@@ -577,8 +579,10 @@ class AnimeDetailPage(toga.Box):
     async def _mark_as_watched(self, widget: toga.Widget) -> None:
         """Mark the anime as watched."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Watch progress tracking is not implemented yet. "
+            "This will mark the entire anime as watched."
+        )
 
     async def _mark_episode_watched(
         self,
@@ -586,8 +590,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Mark a specific episode as watched."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            f"Episode progress tracking is not implemented yet. "
+            f"Episode {episode} will be marked as watched here."
+        )
 
     async def _add_rating(
         self,
@@ -595,8 +601,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Rate the anime."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            f"Anime rating is not implemented yet. "
+            f"A rating of {rating} will be saved here."
+        )
 
     async def _open_external_page(
         self,
@@ -604,8 +612,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Open the anime's external page."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "External page support is not implemented yet. "
+            "This will open the anime's page on the external service."
+        )
 
     async def _download_poster(
         self,
@@ -613,8 +623,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Download/save the anime poster."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Poster download is not implemented yet. "
+            "This will allow you to save the anime poster locally."
+        )
 
     async def _add_to_collection(
         self,
@@ -622,8 +634,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Add anime to a custom collection."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Custom collections are not implemented yet. "
+            "This will allow you to add the anime to one of your collections."
+        )
 
     async def _remove_from_collection(
         self,
@@ -631,8 +645,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Remove anime from a custom collection."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Custom collection management is not implemented yet. "
+            "This will allow you to remove the anime from a collection."
+        )
 
     async def _show_related_anime(
         self,
@@ -640,8 +656,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Display related anime."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Related anime are not available yet. "
+            "This section will show anime connected to this title."
+        )
 
     async def _show_characters(
         self,
@@ -649,8 +667,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Display anime characters."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Character information is not implemented yet. "
+            "This will display the characters and their roles in the anime."
+        )
 
     async def _show_staff(
         self,
@@ -658,8 +678,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Display anime staff."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Staff information is not implemented yet. "
+            "This will display the people involved in producing the anime."
+        )
 
     async def _show_recommendations(
         self,
@@ -667,8 +689,10 @@ class AnimeDetailPage(toga.Box):
     ) -> None:
         """Display recommended anime."""
 
-        # TODO
-        pass
+        self.context.not_implemented_notification(
+            "Anime recommendations are not implemented yet. "
+            "This will show titles similar to the current anime."
+        )
 
     # =========================================================
     # ERROR HANDLING
