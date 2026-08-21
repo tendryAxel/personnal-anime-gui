@@ -1,3 +1,4 @@
+from anime_gui.context import ApplicationContext
 from anime_gui.pages.details_page import AnimeDetailPage
 from typing import Callable, Any, Coroutine
 from toga.style import Pack
@@ -12,16 +13,16 @@ from anime_gui.components.image import LoadImage
 
 class SingleAnimeSearchResult(Box):
     image_component: LoadImage
-    pages: PageManager
+    context: ApplicationContext
     anime: Anime
 
     def __init__(
         self,
         anime: Anime,
-        pages: PageManager,
+        context: ApplicationContext,
     ):
         self.anime = anime
-        self.pages = pages
+        self.context = context
         self.image_component = LoadImage(
             anime.poster_image("tiny"),
             style=Pack(
@@ -95,7 +96,7 @@ class SingleAnimeSearchResult(Box):
         page_id = f"details-{self.anime.id}"
         detail_page = AnimeDetailPage()
 
-        self.pages.register(
+        self.context.page_manager.register(
             page_id,
             detail_page,
         )
@@ -104,7 +105,7 @@ class SingleAnimeSearchResult(Box):
             raise Exception("Application not set")
         self.app.loop.create_task(detail_page.load(int(self.anime.id)))
 
-        self.pages.show(page_id)
+        self.context.page_manager.show(page_id)
 
 def create_pagination_button(
     on_previous: Callable[[Any], None],

@@ -1,3 +1,4 @@
+from anime_gui.context import ApplicationContext
 from kitsu_extended import Anime
 from toga.constants import COLUMN, ROW
 from toga import OptionContainer, Box, TextInput, Button, Label, ScrollContainer
@@ -13,7 +14,7 @@ from anime_gui.navigation import PageManager
 class SearchPage(OptionContainer):
     pagination: PageParam
     animes_component: list[SingleAnimeSearchResult]
-    page_manager: PageManager
+    context: ApplicationContext
 
     search_input: TextInput
     search_button: Button
@@ -27,11 +28,11 @@ class SearchPage(OptionContainer):
     results_header: Label
     search_tab: Box
     
-    def __init__(self, pages: PageManager):
+    def __init__(self, context: ApplicationContext):
         # Variables
         self.pagination = PageParam(0, 10)
         self.animes_component = []
-        self.page_manager = pages
+        self.context = context
 
         # Components
         self.search_input = TextInput(
@@ -182,7 +183,7 @@ class SearchPage(OptionContainer):
             self.animes_component.append(
                 SingleAnimeSearchResult(
                     anime,
-                    self.page_manager,
+                    self.context,
                 )
             )
 
