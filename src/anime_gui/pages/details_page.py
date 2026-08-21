@@ -1,4 +1,5 @@
 from __future__ import annotations
+from anime_gui.context import ApplicationContext
 from toga.style.pack import COLUMN, ROW
 from typing import Optional
 import toga
@@ -14,9 +15,11 @@ class AnimeDetailPage(toga.Box):
 
     anime_id: Optional[int]
     anime: Optional[Anime]
+    context: ApplicationContext
 
     def __init__(
         self,
+        context: ApplicationContext,
         *,
         style: toga.style.Pack | None = None,
         id: str | None = None,
@@ -24,6 +27,7 @@ class AnimeDetailPage(toga.Box):
     ):
         self.anime_id = None
         self.anime = None
+        self.context = context
 
         super().__init__(
             style=toga.style.Pack(
@@ -558,21 +562,7 @@ class AnimeDetailPage(toga.Box):
     async def _share(self, widget: toga.Widget) -> None:
         """Share the anime."""
 
-        if self.app is None:
-            raise Exception("Application not set")
-
-        if self.app.main_window is None:
-            raise Exception("Main window not set")
-
-        if isinstance(self.app.main_window, str):
-            raise Exception("Main window set as string, must be Window object")
-        
-        # TODO: group page and notification as single context manager
-        # TODO: create Not implemented Exception
-        self.app.main_window.info_dialog(
-            "Not implemented",
-            "Share function will be implemented soon",
-        )
+        self.context.not_implemented_notification("Share function will be implemented soon")
 
     async def _refresh(self, widget: toga.Widget) -> None:
         """Reload the current anime."""

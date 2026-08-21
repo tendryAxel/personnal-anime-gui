@@ -94,7 +94,7 @@ class SingleAnimeSearchResult(Box):
     
     async def push_anime_info_details(self, *args, **kwargs) -> None:
         page_id = f"details-{self.anime.id}"
-        detail_page = AnimeDetailPage()
+        detail_page = AnimeDetailPage(self.context)
 
         self.context.page_manager.register(
             page_id,
