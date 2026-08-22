@@ -527,9 +527,7 @@ class AnimeDetailPage(toga.Box):
     async def _go_back(self, widget: toga.Widget) -> None:
         """Go back to the previous page."""
 
-        self.context.not_implemented_notification(
-            "Back navigation will be connected to the application router soon."
-        )
+        self.context.page_manager.back()
 
     # =========================================================
     # ACTIONS
