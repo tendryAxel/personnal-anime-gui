@@ -1,13 +1,11 @@
-from anime_gui.context import ApplicationContext
-from anime_gui.pages.details_page import AnimeDetailPage
 from typing import Callable, Any, Coroutine
 from toga.style import Pack
 from toga import Box, Label, Button
 from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
-from typing import TYPE_CHECKING
 
-from anime_gui.navigation import PageManager
+from anime_gui.context import ApplicationContext
+from anime_gui.pages.details_page import AnimeDetailPage
 from anime_gui.components.image import LoadImage
 
 
@@ -16,6 +14,8 @@ class SingleAnimeSearchResult(Box):
     context: ApplicationContext
     anime: Anime
 
+    MAX_DESCRIPTION_LENGTH = 100
+
     def __init__(
         self,
         anime: Anime,
@@ -23,64 +23,82 @@ class SingleAnimeSearchResult(Box):
     ):
         self.anime = anime
         self.context = context
+
         self.image_component = LoadImage(
             anime.poster_image("tiny"),
             style=Pack(
-                width=180,
-                height=240,
+                width=150,
+                height=220,
                 margin_right=15,
+            ),
+        )
+
+        title = Label(
+            anime.title or "Unknown title",
+            style=Pack(
+                font_size=18,
+                font_weight="bold",
+                padding_bottom=8,
+            ),
+        )
+
+        metadata = Label(
+            f"⭐ {anime.average_rating or '?'}  •  "
+            f"{anime.subtype or '?'}  •  "
+            f"{anime.episode_count or '?'} episodes  •  "
+            f"{anime.status or '?'}",
+            style=Pack(
+                padding_bottom=8,
+            ),
+        )
+
+        description = Label(
+            self._truncate_description(
+                anime.synopsis or "No synopsis available."
+            ),
+            style=Pack(
+                flex=1,
+                padding_bottom=10,
+            ),
+        )
+
+        info_button = Button(
+            "Info",
+            on_press=self.push_anime_info_details,
+            style=Pack(
+                width=90,
+                padding=6,
+            ),
+        )
+
+        text_content = Box(
+            children=[
+                title,
+                metadata,
+                description,
+                info_button,
+            ],
+            style=Pack(
+                direction=COLUMN,
+                flex=1,
+                padding=5,
+            ),
+        )
+
+        content = Box(
+            children=[
+                self.image_component,
+                text_content,
+            ],
+            style=Pack(
+                direction=ROW,
+                flex=1,
             ),
         )
 
         super().__init__(
             children=[
-                Label(
-                    anime.title or "",
-                    style=Pack(
-                        font_size=18,
-                        font_weight="bold",
-                        margin_bottom=5,
-                    ),
-                ),
-
-                Box(
-                    children=[
-                        self.image_component,
-                        Box(
-                            children=[
-                                Label(
-                                    f"⭐ {anime.average_rating or '?'}  •  "
-                                    f"{anime.subtype or '?'}  •  "
-                                    f"{anime.episode_count or '?'} episodes  •  "
-                                    f"{anime.status or '?'}",
-                                    style=Pack(
-                                        margin_bottom=8,
-                                    ),
-                                ),
-
-                                Label(
-                                    anime.synopsis or "No synopsis available.",
-                                    style=Pack(
-                                        flex=1,
-                                    ),
-                                ),
-
-                                Button(
-                                    "info",
-                                    on_press=self.push_anime_info_details,
-                                ),
-                            ],
-                            style=Pack(
-                                direction=COLUMN,
-                                flex=1,
-                            ),
-                        ),
-                    ],
-                    style=Pack(
-                        direction=ROW,
-                        flex=1,
-                    ),
-                ),
+                content,
             ],
             style=Pack(
                 direction=COLUMN,
@@ -88,12 +106,33 @@ class SingleAnimeSearchResult(Box):
                 margin=10,
             ),
         )
-    
+
+    @classmethod
+    def _truncate_description(
+        cls,
+        description: str,
+    ) -> str:
+        description = " ".join(description.split())
+
+        if len(description) <= cls.MAX_DESCRIPTION_LENGTH:
+            return description
+
+        return (
+            description[: cls.MAX_DESCRIPTION_LENGTH]
+            .rsplit(" ", 1)[0]
+            + "..."
+        )
+
     def start_loading(self) -> None:
         self.image_component.start_loading()
-    
-    async def push_anime_info_details(self, *args, **kwargs) -> None:
+
+    async def push_anime_info_details(
+        self,
+        *args,
+        **kwargs,
+    ) -> None:
         page_id = f"details-{self.anime.id}"
+
         detail_page = AnimeDetailPage(self.context)
 
         self.context.page_manager.register(
@@ -103,50 +142,13 @@ class SingleAnimeSearchResult(Box):
 
         if self.app is None:
             raise Exception("Application not set")
-        self.app.loop.create_task(detail_page.load(int(self.anime.id)))
 
         self.context.page_manager.show(page_id)
 
-def create_pagination_button(
-    on_previous: Callable[[Any], None],
-    on_next: Callable[[Any], None],
-) -> Box:
-    previous_button = Button(
-        "← Previous",
-        on_press=on_previous,
-        style=Pack(
-            flex=1,
-            margin_right=5,
-        ),
-    )
+        self.app.loop.create_task(
+            detail_page.load(int(self.anime.id))
+        )
 
-    page_label = Label(
-        "Page 0",
-        style=Pack(
-            margin=5,
-        ),
-    )
-
-    next_button = Button(
-        "Next →",
-        on_press=on_next,
-        style=Pack(
-            flex=1,
-            margin_left=5,
-        ),
-    )
-
-    return Box(
-        children=[
-            previous_button,
-            page_label,
-            next_button,
-        ],
-        style=Pack(
-            direction=ROW,
-            margin_top=10,
-    )
-)
 
 class PaginationButton(Box):
     page: int
