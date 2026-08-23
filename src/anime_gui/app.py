@@ -1,9 +1,8 @@
 from toga import App, MainWindow
 
 from anime_gui.context import ApplicationContext
-from anime_gui.pages.details_page import AnimeDetailPage
-from anime_gui.pages.search_page import SearchPage
 from anime_gui.navigation import PageManager
+from anime_gui.pages.search_page import SearchPage
 
 
 class MyApp(App):

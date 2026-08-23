@@ -1,23 +1,22 @@
-from anime_info_api.main import CachingUtilities
-from typing import Optional
-from threading import Thread
 from io import BytesIO
+from threading import Thread
 
 import requests
 import toga
 import toga.style
-
 from PIL import Image as PILImage
+
+from anime_info_api.main import CachingUtilities
 
 
 class LoadImage(toga.ImageView):
     """ImageView that loads an image asynchronously from a URL."""
 
-    url: Optional[str]
+    url: str | None
 
     def __init__(
         self,
-        url: Optional[str],
+        url: str | None,
         *,
         style: toga.style.Pack | None = None,
         id: str | None = None,

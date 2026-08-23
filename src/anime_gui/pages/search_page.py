@@ -1,13 +1,12 @@
-from anime_gui.context import ApplicationContext
 from kitsu_extended import Anime
+from toga import Box, Button, Label, OptionContainer, ScrollContainer, TextInput
 from toga.constants import COLUMN, ROW
-from toga import OptionContainer, Box, TextInput, Button, Label, ScrollContainer
 from toga.style import Pack
 
-from anime_info_api.main import PageParam
-from anime_info_api import anime
 from anime_gui.components.search_list import PaginationButton, SingleAnimeSearchResult
-from anime_gui.navigation import PageManager
+from anime_gui.context import ApplicationContext
+from anime_info_api import anime
+from anime_info_api.main import PageParam
 
 
 # TODO: reset pagination for new query

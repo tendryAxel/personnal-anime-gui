@@ -1,11 +1,11 @@
-from typing import Optional
-from toga import Window, Widget
+
+from toga import Widget, Window
 
 
 class PageManager:
     window: Window
     pages: dict[str, Widget]
-    current: Optional[str]
+    current: str | None
     navigation_stack: list[str]
 
     def __init__(self, window: Window):

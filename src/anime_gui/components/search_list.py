@@ -1,12 +1,13 @@
-from typing import Callable, Any, Coroutine
-from toga.style import Pack
-from toga import Box, Label, Button
+from collections.abc import Callable, Coroutine
+
 from kitsu_extended import Anime
+from toga import Box, Button, Label
+from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
+from anime_gui.components.image import LoadImage
 from anime_gui.context import ApplicationContext
 from anime_gui.pages.details_page import AnimeDetailPage
-from anime_gui.components.image import LoadImage
 
 
 class SingleAnimeSearchResult(Box):

@@ -1,6 +1,7 @@
-from toga.window import Dialog
-from toga import Window
 import dataclasses
+
+from toga import Window
+from toga.window import Dialog
 
 from anime_gui.navigation import PageManager
 

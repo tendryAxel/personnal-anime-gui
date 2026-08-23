@@ -1,20 +1,20 @@
-from anime_gui.settings import home_setting_path
-import inspect
-import datetime
-from diskcache import Cache
-from collections.abc import Callable, Coroutine, Awaitable
-from functools import wraps
-from ast import arg
 import base64
-import pickle
 import dataclasses
-from types import CoroutineType
-from typing import TypeIs, Any
-import kitsu_extended as kitsu
-import dotenv
+import datetime
 import hashlib
+import inspect
 import json
-import time
+import pickle
+from collections.abc import Awaitable, Callable
+from functools import wraps
+from types import CoroutineType
+from typing import Any, TypeIs
+
+import dotenv
+import kitsu_extended as kitsu
+from diskcache import Cache
+
+from anime_gui.settings import home_setting_path
 
 dotenv.load_dotenv()
 

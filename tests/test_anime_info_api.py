@@ -1,4 +1,5 @@
 import pytest
+
 from anime_info_api import anime
 
 

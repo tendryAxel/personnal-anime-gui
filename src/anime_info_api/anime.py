@@ -1,14 +1,15 @@
+import os
+
+from kitsu_extended import Anime
+
 from anime_info_api.main import (
     CachingUtilities,
-    _api_request,
-    isAnime_validation,
     PageParam,
+    _api_request,
     isAnime,
     isAnime_list_validation,
+    isAnime_validation,
 )
-import os
-from typing import Optional
-from kitsu_extended import Anime
 
 
 @CachingUtilities.async_caching
@@ -21,7 +22,7 @@ async def get_by_id(anime_id: int) -> Anime:
 @CachingUtilities.async_caching
 async def find_by_name(
     anime_name: str,
-    page_param: Optional[PageParam] = None,
+    page_param: PageParam | None = None,
 ) -> list[Anime]:
     limit, offset = int(os.getenv("DEFAULT_DEFAULT_PAGE_REQUEST_LIMIT", 20)), 0
     if page_param is not None:

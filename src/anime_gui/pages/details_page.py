@@ -1,20 +1,20 @@
 from __future__ import annotations
-from anime_gui.context import ApplicationContext
-from toga.style.pack import COLUMN, ROW
-from typing import Optional
+
 import toga
 import toga.style
-
-from anime_info_api.anime import get_by_id
-from anime_gui.components.image import LoadImage
 from kitsu_extended import Anime
+from toga.style.pack import COLUMN, ROW
+
+from anime_gui.components.image import LoadImage
+from anime_gui.context import ApplicationContext
+from anime_info_api.anime import get_by_id
 
 
 class AnimeDetailPage(toga.Box):
     """Page displaying the details of an anime."""
 
-    anime_id: Optional[int]
-    anime: Optional[Anime]
+    anime_id: int | None
+    anime: Anime | None
     context: ApplicationContext
 
     def __init__(
