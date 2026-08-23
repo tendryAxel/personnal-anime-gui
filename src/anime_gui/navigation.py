@@ -1,4 +1,3 @@
-
 from toga import Widget, Window
 
 
