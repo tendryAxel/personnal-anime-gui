@@ -1,6 +1,11 @@
 name: Lint & Format Check
 
 on:
+  push:
+    branches:
+      - prod
+      - preprod
+
   pull_request:
     branches:
       - prod

@@ -1,6 +1,11 @@
 name: Tests api wrapper
 
 on:
+  push:
+    branches:
+      - prod
+      - preprod
+
   pull_request:
     branches:
       - prod
