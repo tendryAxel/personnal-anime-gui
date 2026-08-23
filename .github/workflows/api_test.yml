@@ -1,0 +1,35 @@
+name: Tests api wrapper
+
+on:
+  pull_request:
+    branches:
+      - prod
+      - preprod
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+          gcc \
+          libcairo2-dev \
+          pkg-config \
+          python3-dev \
+          libgirepository-2.0-dev \
+          gobject-introspection \
+          gir1.2-gtk-4.0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run tests
+        run: uv run pytest

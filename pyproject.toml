@@ -33,7 +33,10 @@ license = "MIT"
 [tool.briefcase.app.anime_gui]
 formal_name = "Anime GUI"
 description = "My anime GUI application"
-sources = ["src/anime_gui"]
+sources = [
+    "src/anime_gui",
+    "src/anime_info_api",
+]
 
 [dependency-groups]
 dev = [
@@ -42,4 +45,5 @@ dev = [
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.4",
 ]

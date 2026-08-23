@@ -1,0 +1,22 @@
+name: Lint & Format Check
+
+on:
+  pull_request:
+    branches:
+      - prod
+      - preprod
+
+jobs:
+  lint-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: "format --diff ."
+
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: "check --diff ."
