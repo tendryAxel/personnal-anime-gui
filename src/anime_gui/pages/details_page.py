@@ -1,4 +1,5 @@
 from __future__ import annotations
+from anime_gui.components.video import VideoPlayer, VideoSource
 
 import toga
 import toga.style
@@ -293,6 +294,11 @@ class AnimeDetailPage(toga.Box):
                 synopsis_title,
                 synopsis,
                 genres,
+                VideoPlayer(
+                    source=VideoSource(
+                        url="/home/axel/Downloads/Anime/Lycoris Recoil/Lycoris Recoil E01.mp4",
+                    ),
+                ),
             ],
             style=toga.style.Pack(
                 direction=COLUMN,
