@@ -27,7 +27,7 @@ class SearchPage(OptionContainer):
     search_card: Box
     results_header: Label
     search_tab: Box
-    
+
     def __init__(self, context: ApplicationContext):
         # Variables
         self.pagination = PageParam(0, 10)
@@ -172,7 +172,7 @@ class SearchPage(OptionContainer):
 
         for element in self.animes_component:
             element.start_loading()
-    
+
     def build_anime_list(self, animes: list[Anime] | None) -> None:
         self.animes_component.clear()
 

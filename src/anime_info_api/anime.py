@@ -1,4 +1,11 @@
-from anime_info_api.main import CachingUtilities, _api_request, isAnime_validation, PageParam, isAnime, isAnime_list_validation
+from anime_info_api.main import (
+    CachingUtilities,
+    _api_request,
+    isAnime_validation,
+    PageParam,
+    isAnime,
+    isAnime_list_validation,
+)
 import os
 from typing import Optional
 from kitsu_extended import Anime
@@ -20,11 +27,13 @@ async def find_by_name(
     if page_param is not None:
         limit, offset = page_param.limit, page_param.offset
 
-    result = await _api_request(lambda client: client.search_anime(anime_name, limit, offset))
+    result = await _api_request(
+        lambda client: client.search_anime(anime_name, limit, offset)
+    )
 
     if isAnime(result):
         result = [result]
-    
+
     assert isAnime_list_validation(result)
 
     return result

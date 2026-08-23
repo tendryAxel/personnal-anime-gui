@@ -53,9 +53,7 @@ class SingleAnimeSearchResult(Box):
         )
 
         description = Label(
-            self._truncate_description(
-                anime.synopsis or "No synopsis available."
-            ),
+            self._truncate_description(anime.synopsis or "No synopsis available."),
             style=Pack(
                 flex=1,
                 padding_bottom=10,
@@ -117,11 +115,7 @@ class SingleAnimeSearchResult(Box):
         if len(description) <= cls.MAX_DESCRIPTION_LENGTH:
             return description
 
-        return (
-            description[: cls.MAX_DESCRIPTION_LENGTH]
-            .rsplit(" ", 1)[0]
-            + "..."
-        )
+        return description[: cls.MAX_DESCRIPTION_LENGTH].rsplit(" ", 1)[0] + "..."
 
     def start_loading(self) -> None:
         self.image_component.start_loading()
@@ -145,9 +139,7 @@ class SingleAnimeSearchResult(Box):
 
         self.context.page_manager.show(page_id)
 
-        self.app.loop.create_task(
-            detail_page.load(int(self.anime.id))
-        )
+        self.app.loop.create_task(detail_page.load(int(self.anime.id)))
 
 
 class PaginationButton(Box):

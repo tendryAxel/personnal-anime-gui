@@ -34,12 +34,14 @@ class PageManager:
     def show(self, name: str) -> None:
         self.navigation_stack.append(name)
         self._show_without_navigation_history(name)
-    
+
     def back(self) -> None:
         self._has_2_or_more_pages_in_navigation_history()
         self.navigation_stack.pop()
         self._show_without_navigation_history(self.navigation_stack[-1])
-    
+
     def _has_2_or_more_pages_in_navigation_history(self) -> None:
         if len(self.navigation_stack) < 2:
-            raise RuntimeError(f"Less than 2 pages in navigation history, only {self.navigation_stack}")
+            raise RuntimeError(
+                f"Less than 2 pages in navigation history, only {self.navigation_stack}"
+            )

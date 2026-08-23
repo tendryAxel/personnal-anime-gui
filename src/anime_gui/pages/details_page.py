@@ -153,14 +153,12 @@ class AnimeDetailPage(toga.Box):
         header = toga.Box(
             children=[
                 back_button,
-
                 toga.Box(
                     children=[],
                     style=toga.style.Pack(
                         flex=1,
                     ),
                 ),
-
                 refresh_button,
             ],
             style=toga.style.Pack(
