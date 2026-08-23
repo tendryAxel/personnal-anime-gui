@@ -174,7 +174,7 @@ class AnimeDetailPage(toga.Box):
         # -----------------------------------------------------
 
         poster = LoadImage(
-            anime.poster_image("small"),
+            anime.poster_image("original"),
             style=toga.style.Pack(
                 width=220,
                 height=330,
@@ -346,6 +346,7 @@ class AnimeDetailPage(toga.Box):
 
         self.add(header)
         self.add(scroll)
+        poster.start_loading()
 
     # =========================================================
     # COMPONENT BUILDERS
