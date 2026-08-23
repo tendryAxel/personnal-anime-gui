@@ -15,8 +15,8 @@ jobs:
 
       - uses: astral-sh/ruff-action@v3
         with:
-          args: "format --check ."
+          args: "format --diff ."
 
       - uses: astral-sh/ruff-action@v3
         with:
-          args: "check ."
+          args: "check --diff ."
