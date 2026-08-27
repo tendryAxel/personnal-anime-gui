@@ -291,7 +291,8 @@ class AnimeDetailPage(toga.Box):
                 subtitle,
                 actions,
                 VideoView(
-                    "LR.mp4",
+                    self.context,
+                    "/LR.mp4",
                 ),
                 metadata,
                 synopsis_title,

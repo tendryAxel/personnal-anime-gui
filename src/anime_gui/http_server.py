@@ -82,11 +82,11 @@ class RangeRequestHandler(SimpleHTTPRequestHandler):
                 pass
 
 
-def start_sever(resource_dir: Path) -> HTTPServer:
+def start_sever(port: int, resource_dir: Path) -> HTTPServer:
     """Start HTTP server with range request support"""
     os.chdir(resource_dir)
 
-    http_server = HTTPServer(("localhost", 8765), RangeRequestHandler)
+    http_server = HTTPServer(("localhost", port), RangeRequestHandler)
     thread = threading.Thread(target=http_server.serve_forever, daemon=True)
     thread.start()
     print(f"HTTP server started: {resource_dir}")

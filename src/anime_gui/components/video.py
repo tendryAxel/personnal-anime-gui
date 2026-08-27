@@ -1,12 +1,19 @@
 import toga
 from toga.style import Pack
 
+from anime_gui.context import ApplicationContext
+
 
 class VideoView(toga.Box):
     video_filename: str
+    context: ApplicationContext
     webview: toga.WebView
 
-    def __init__(self, video_filename: str):
+    def __init__(
+        self,
+        context: ApplicationContext,
+        video_filename: str,
+    ):
         super().__init__(style=Pack(flex=1))
 
         self.video_filename = video_filename
@@ -14,7 +21,7 @@ class VideoView(toga.Box):
         self.add(self.webview)
 
         # Use localhost HTTP server (started by app)
-        video_url = f"http://localhost:8765/{video_filename}"
+        video_url = context.file_name_to_video_resource_url(video_filename)
 
         html = f"""
         <html>

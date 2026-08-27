@@ -11,8 +11,10 @@ from anime_gui.pages.search_page import SearchPage
 
 class MyApp(App):
     http_server: HTTPServer
+    http_server_port: int
 
     def startup(self) -> None:
+        self.http_server_port = 8765
         self._start_resource_server()
 
         self.main_window: MainWindow = MainWindow(
@@ -25,6 +27,7 @@ class MyApp(App):
             self.main_window,
             loop=self.loop,
             app=self,
+            video_server_url=f"http://localhost:{self.http_server_port}",
         )
 
         self.search_page = SearchPage(self.context)
@@ -34,7 +37,7 @@ class MyApp(App):
 
     def _start_resource_server(self) -> None:
         resource_dir = Path(self.paths.app) / "resources" / "videos"
-        self.http_server = start_sever(resource_dir)
+        self.http_server = start_sever(self.http_server_port, resource_dir)
 
     def shutdown(self) -> None:
         """Properly shutdown HTTP server"""
