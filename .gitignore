@@ -202,3 +202,4 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+src/anime_gui/resources/videos/

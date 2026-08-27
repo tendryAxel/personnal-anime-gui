@@ -22,6 +22,7 @@ dotenv.load_dotenv()
 class CachingUtilities:
     cache = Cache(home_setting_path / "cache")
     byte_encoding = "ascii"
+    verbose: bool = False
 
     @staticmethod
     def _make_cache_key(function_hashed: str, args: dict[str, Any]):
@@ -36,7 +37,8 @@ class CachingUtilities:
             default=str,
         )
 
-        print(f"Raw: {raw}")
+        if CachingUtilities.verbose:
+            print(f"Raw: {raw}")
 
         return hashlib.sha256(raw.encode()).hexdigest()
 
@@ -69,11 +71,13 @@ class CachingUtilities:
 
             cached = cls.cache.get(request_key)
             if cached is not None:
-                print(f"Cache HIT for the {request_key = }")
+                if cls.verbose:
+                    print(f"Cache HIT for the {request_key = }")
                 return cls.deserialize(cached)
 
             result = await func(*args, **kwargs)
-            print(f"Cache MISS for the {request_key = }")
+            if cls.verbose:
+                print(f"Cache MISS for the {request_key = }")
 
             cls.cache.add(
                 request_key,
@@ -102,11 +106,13 @@ class CachingUtilities:
 
             cached = cls.cache.get(request_key)
             if cached is not None:
-                print(f"Cache HIT for the {request_key = }")
+                if cls.verbose:
+                    print(f"Cache HIT for the {request_key = }")
                 return cls.deserialize(cached)
 
             result = func(*args, **kwargs)
-            print(f"Cache MISS for the {request_key = }")
+            if cls.verbose:
+                print(f"Cache MISS for the {request_key = }")
 
             cls.cache.add(
                 request_key,
