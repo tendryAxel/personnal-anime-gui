@@ -1,5 +1,5 @@
 from __future__ import annotations
-from anime_gui.components.video import VideoPlayer, VideoSource
+from anime_gui.components.video import VlcVideo
 
 import toga
 import toga.style
@@ -290,15 +290,13 @@ class AnimeDetailPage(toga.Box):
                 title,
                 subtitle,
                 actions,
+                VlcVideo(
+                    "/home/axel/Downloads/Anime/Lycoris Recoil/Lycoris Recoil E01.mp4",
+                ),
                 metadata,
                 synopsis_title,
                 synopsis,
                 genres,
-                VideoPlayer(
-                    source=VideoSource(
-                        url="/home/axel/Downloads/Anime/Lycoris Recoil/Lycoris Recoil E01.mp4",
-                    ),
-                ),
             ],
             style=toga.style.Pack(
                 direction=COLUMN,

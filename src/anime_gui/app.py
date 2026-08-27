@@ -15,6 +15,7 @@ class MyApp(App):
         self.context = ApplicationContext(
             pages,
             self.main_window,
+            loop=self.loop,
         )
 
         self.search_page = SearchPage(self.context)
