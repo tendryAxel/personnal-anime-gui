@@ -6,6 +6,7 @@ from kitsu_extended import Anime
 from toga.style.pack import COLUMN, ROW
 
 from anime_gui.components.image import LoadImage
+from anime_gui.components.video import VideoView
 from anime_gui.context import ApplicationContext
 from anime_info_api.anime import get_by_id
 
@@ -289,6 +290,10 @@ class AnimeDetailPage(toga.Box):
                 title,
                 subtitle,
                 actions,
+                VideoView(
+                    self.context,
+                    "/LR.mp4",
+                ),
                 metadata,
                 synopsis_title,
                 synopsis,
